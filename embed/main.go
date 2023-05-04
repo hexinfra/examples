@@ -90,7 +90,7 @@ func (h *myHandlet) onCreate(name string, stage *Stage, app *App) {
 
 	r.Link("/foo", h.handleFoo)
 
-	h.SetRouter(h, r)
+	h.UseRouter(h, r)
 }
 func (h *myHandlet) OnShutdown() {
 	h.app.SubDone()

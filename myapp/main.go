@@ -23,10 +23,11 @@ ACTION
   serve        # start as server
   stop         # tell server to exit immediately
   quit         # tell server to exit gracefully
-  info         # call info of server
+  pid          # call server to report pids of leader and worker
   rework       # tell leader to restart worker gracefully
   reopen       # tell leader to reopen its admin interface
-  ping         # call ping of leader
+  ping         # call leader to give a pong
+  info         # call worker to report its info
   reconf       # tell worker to reconfigure
   cpu          # tell worker to perform cpu profiling
   heap         # tell worker to perform heap profiling
@@ -88,7 +89,7 @@ func (h *myHandlet) onCreate(name string, stage *Stage, app *App) {
 
 	r.Link("/foo", h.handleFoo)
 
-	h.SetRouter(h, r)
+	h.UseRouter(h, r)
 }
 func (h *myHandlet) OnShutdown() {
 	h.app.SubDone()
