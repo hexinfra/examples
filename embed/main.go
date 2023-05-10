@@ -7,11 +7,10 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-)
 
-import (
-	. "github.com/hexinfra/gorox/hemi"
 	"github.com/hexinfra/gorox/hemi/contrib/routers/simple"
+
+	. "github.com/hexinfra/gorox/hemi"
 )
 
 func main() {
