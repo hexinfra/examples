@@ -5,7 +5,7 @@ package main
 import (
 	. "github.com/hexinfra/gorox/hemi"
 	"github.com/hexinfra/gorox/hemi/contrib/routers/simple"
-	"github.com/hexinfra/gorox/hemi/process"
+	"github.com/hexinfra/gorox/hemi/procman"
 )
 
 const usage = `
@@ -17,18 +17,20 @@ MyApp (%s)
 ACTION
 ------
 
+  serve        # start as server
+  check        # dry run to check config
   help         # show this message
   version      # show version info
   advise       # show how to optimize current platform
-  serve        # start as server
   stop         # tell server to exit immediately
   quit         # tell server to exit gracefully
   pid          # call server to report pids of leader and worker
+  leader       # call leader to report its info
   rework       # tell leader to restart worker gracefully
-  reopen       # tell leader to reopen its admin interface
+  readmin      # tell leader to reopen its admin interface
   ping         # call leader to give a pong
-  info         # call worker to report its info
-  reconf       # tell worker to reconfigure
+  worker       # call worker to report its info
+  reload       # tell worker to reload config
   cpu          # tell worker to perform cpu profiling
   heap         # tell worker to perform heap profiling
   thread       # tell worker to perform thread profiling
@@ -36,7 +38,7 @@ ACTION
   block        # tell worker to perform block profiling
 
   Only one action is allowed at a time.
-  If ACTION is missing, the default action is "serve".
+  If ACTION is not specified, the default action is "serve".
 
 OPTIONS
 -------
@@ -44,7 +46,8 @@ OPTIONS
   -debug  <level>     # debug level (default: 0, means disable. max: 2)
   -target <addr>      # leader address to tell or call (default: 127.0.0.1:9528)
   -admin  <addr>      # listen address of leader admin (default: 127.0.0.1:9528)
-  -try                # try to serve with config
+  -myrox  <addr>      # myrox address to join. if set, "-admin" will be ignored
+  -conf   <config>    # path or url to worker config file
   -single             # run server in single mode. only a process is started
   -daemon             # run server as daemon (default: false)
   -log    <path>      # leader log file (default: myapp-leader.log in logs dir)
@@ -52,17 +55,16 @@ OPTIONS
   -logs   <path>      # logs directory to use
   -temp   <path>      # temp directory to use
   -vars   <path>      # vars directory to use
-  -config <config>    # path or url to worker config file
 
   "-debug" applies for all actions.
   "-target" applies for telling and calling actions only.
-  "-admin" applies for "reopen" and "serve".
+  "-admin" applies for "serve" and "readmin".
   Other options apply for "serve" only.
 
 `
 
 func main() {
-	process.Main("myapp", usage, 0, "127.0.0.1:9528")
+	procman.Main("myapp", usage, 0, "127.0.0.1:9528")
 }
 
 func init() {
