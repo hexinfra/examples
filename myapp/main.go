@@ -3,7 +3,7 @@
 package main
 
 import (
-	"github.com/hexinfra/gorox/hemi/contrib/routers/simple"
+	"github.com/hexinfra/gorox/hemi/contrib/mappers/simple"
 	"github.com/hexinfra/gorox/hemi/procman"
 
 	. "github.com/hexinfra/gorox/hemi"
@@ -18,25 +18,25 @@ MyApp (%s)
 ACTION
 ------
 
-  serve        # start as server
-  check        # dry run to check config
-  help         # show this message
-  version      # show version info
-  advise       # show how to optimize current platform
-  stop         # tell server to exit immediately
-  quit         # tell server to exit gracefully
-  pid          # call server to report pids of leader and worker
-  leader       # call leader to report its info
-  rework       # tell leader to restart worker gracefully
-  readmin      # tell leader to reopen its admin interface
-  ping         # call leader to give a pong
-  worker       # call worker to report its info
-  reload       # tell worker to reload config
-  cpu          # tell worker to perform cpu profiling
-  heap         # tell worker to perform heap profiling
-  thread       # tell worker to perform thread profiling
-  goroutine    # tell worker to perform goroutine profiling
-  block        # tell worker to perform block profiling
+  serve      # start as server
+  check      # dry run to check config
+  help       # show this message
+  version    # show version info
+  advise     # show how to optimize current platform
+  pids       # call server to report pids of leader and worker
+  stop       # tell server to exit immediately
+  quit       # tell server to exit gracefully
+  leader     # call leader to report its info
+  recmd      # tell leader to reopen its cmdui interface
+  reweb      # tell leader to reopen its webui interface
+  rework     # tell leader to restart worker gracefully
+  worker     # call worker to report its info
+  reload     # tell worker to reload config
+  cpu        # tell worker to perform cpu profiling
+  heap       # tell worker to perform heap profiling
+  thread     # tell worker to perform thread profiling
+  goroutine  # tell worker to perform goroutine profiling
+  block      # tell worker to perform block profiling
 
   Only one action is allowed at a time.
   If ACTION is not specified, the default action is "serve".
@@ -44,28 +44,30 @@ ACTION
 OPTIONS
 -------
 
-  -debug  <level>     # debug level (default: 0, means disable. max: 2)
-  -target <addr>      # leader address to tell or call (default: 127.0.0.1:9528)
-  -admin  <addr>      # listen address of leader admin (default: 127.0.0.1:9528)
-  -myrox  <addr>      # myrox address to join. if set, "-admin" will be ignored
-  -conf   <config>    # path or url to worker config file
-  -single             # run server in single mode. only a process is started
-  -daemon             # run server as daemon (default: false)
-  -log    <path>      # leader log file (default: myapp-leader.log in logs dir)
-  -base   <path>      # base directory of the program
-  -logs   <path>      # logs directory to use
-  -temp   <path>      # temp directory to use
-  -vars   <path>      # vars directory to use
+  -debug  <level>   # debug level (default: 0, means disable. max: 2)
+  -target <addr>    # leader address to tell or call (default: 127.0.0.1:9527)
+  -cmdui  <addr>    # listen address of leader cmdui (default: 127.0.0.1:9527)
+  -webui  <addr>    # listen address of leader webui (default: 127.0.0.1:9528)
+  -myrox  <addr>    # myrox to use. "-cmdui" and "-webui" will be ignored if set
+  -conf   <config>  # path or url to worker config file
+  -single           # run server in single mode. only a process is started
+  -daemon           # run server as daemon (default: false)
+  -base   <path>    # base directory of the program
+  -logs   <path>    # logs directory to use
+  -temp   <path>    # temp directory to use
+  -vars   <path>    # vars directory to use
+  -log    <path>    # leader log file (default: myapp-leader.log in logs dir)
 
   "-debug" applies for all actions.
   "-target" applies for telling and calling actions only.
-  "-admin" applies for "serve" and "readmin".
+  "-cmdui" apply to "serve" and "recmd".
+  "-webui" apply to "serve" and "reweb".
   Other options apply for "serve" only.
 
 `
 
 func main() {
-	procman.Main("myapp", usage, 0, "127.0.0.1:9528")
+	procman.Main("myapp", usage, 0, "127.0.0.1:9527", "127.0.0.1:9528")
 }
 
 func init() {
@@ -88,11 +90,11 @@ func (h *myHandlet) onCreate(name string, stage *Stage, app *App) {
 	h.stage = stage
 	h.app = app
 
-	r := simple.New()
+	m := simple.New()
 
-	r.Link("/foo", h.handleFoo)
+	m.Map("/foo", h.handleFoo)
 
-	h.UseRouter(h, r)
+	h.UseMapper(h, m)
 }
 func (h *myHandlet) OnShutdown() {
 	h.app.SubDone()

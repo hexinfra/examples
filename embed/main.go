@@ -8,23 +8,12 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/hexinfra/gorox/hemi/contrib/routers/simple"
+	"github.com/hexinfra/gorox/hemi/contrib/mappers/simple"
 
 	. "github.com/hexinfra/gorox/hemi"
 )
 
-func main() {
-	exePath, err := os.Executable()
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	baseDir := filepath.Dir(exePath)
-	if runtime.GOOS == "windows" {
-		baseDir = filepath.ToSlash(baseDir)
-	}
-
-	myConfig := `
+var myConfig = `
 stage {
     app "example" {
         .hostnames = ("*")
@@ -47,6 +36,18 @@ stage {
     }
 }
 `
+
+func main() {
+	exePath, err := os.Executable()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	baseDir := filepath.Dir(exePath)
+	if runtime.GOOS == "windows" {
+		baseDir = filepath.ToSlash(baseDir)
+	}
+
 	if err := startHemi(baseDir, baseDir+"/logs", baseDir+"/temp", baseDir+"/vars", myConfig); err != nil {
 		fmt.Println(err.Error())
 		return
@@ -85,11 +86,11 @@ func (h *myHandlet) onCreate(name string, stage *Stage, app *App) {
 	h.stage = stage
 	h.app = app
 
-	r := simple.New()
+	m := simple.New()
 
-	r.Link("/foo", h.handleFoo)
+	m.Map("/foo", h.handleFoo)
 
-	h.UseRouter(h, r)
+	h.UseMapper(h, m)
 }
 func (h *myHandlet) OnShutdown() {
 	h.app.SubDone()
