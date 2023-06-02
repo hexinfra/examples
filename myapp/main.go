@@ -3,7 +3,7 @@
 package main
 
 import (
-	"github.com/hexinfra/gorox/hemi/contrib/mappers/simple"
+	"github.com/hexinfra/gorox/hemi/contrib/routers/simple"
 	"github.com/hexinfra/gorox/hemi/procman"
 
 	. "github.com/hexinfra/gorox/hemi"
@@ -49,20 +49,21 @@ OPTIONS
   -cmdui  <addr>    # listen address of leader cmdui (default: 127.0.0.1:9527)
   -webui  <addr>    # listen address of leader webui (default: 127.0.0.1:9528)
   -myrox  <addr>    # myrox to use. "-cmdui" and "-webui" will be ignored if set
-  -conf   <config>  # path or url to worker config file
+  -config <config>  # path or url to worker config file
   -single           # run server in single mode. only a process is started
   -daemon           # run server as daemon (default: false)
   -base   <path>    # base directory of the program
   -logs   <path>    # logs directory to use
   -temp   <path>    # temp directory to use
   -vars   <path>    # vars directory to use
-  -log    <path>    # leader log file (default: myapp-leader.log in logs dir)
+  -out    <path>    # daemon's stdout file (default: myapp.log in logs dir)
+  -err    <path>    # daemon's stderr file (default: myapp.err in logs dir)
 
-  "-debug" applies for all actions.
-  "-target" applies for telling and calling actions only.
-  "-cmdui" apply to "serve" and "recmd".
-  "-webui" apply to "serve" and "reweb".
-  Other options apply for "serve" only.
+  "-debug" applies to all actions.
+  "-target" applies to telling and calling actions only.
+  "-cmdui" applies to "serve" and "recmd".
+  "-webui" applies to "serve" and "reweb".
+  Other options apply to "serve" only.
 
 `
 
@@ -90,11 +91,11 @@ func (h *myHandlet) onCreate(name string, stage *Stage, app *App) {
 	h.stage = stage
 	h.app = app
 
-	m := simple.New()
+	r := simple.New()
 
-	m.Map("/foo", h.handleFoo)
+	r.Map("/foo", h.handleFoo)
 
-	h.UseMapper(h, m)
+	h.UseRouter(h, r)
 }
 func (h *myHandlet) OnShutdown() {
 	h.app.SubDone()

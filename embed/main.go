@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/hexinfra/gorox/hemi/contrib/mappers/simple"
+	"github.com/hexinfra/gorox/hemi/contrib/routers/simple"
 
 	. "github.com/hexinfra/gorox/hemi"
 )
@@ -66,7 +66,7 @@ func startHemi(baseDir string, logsDir string, tempDir string, varsDir string, c
 	SetLogsDir(logsDir)
 	SetTempDir(tempDir)
 	SetVarsDir(varsDir)
-	stage, err := ApplyText(configText)
+	stage, err := FromText(configText)
 	if err != nil {
 		return err
 	}
@@ -86,11 +86,11 @@ func (h *myHandlet) onCreate(name string, stage *Stage, app *App) {
 	h.stage = stage
 	h.app = app
 
-	m := simple.New()
+	r := simple.New()
 
-	m.Map("/foo", h.handleFoo)
+	r.Map("/foo", h.handleFoo)
 
-	h.UseMapper(h, m)
+	h.UseRouter(h, r)
 }
 func (h *myHandlet) OnShutdown() {
 	h.app.SubDone()
