@@ -1,78 +1,19 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"path/filepath"
-	"runtime"
-
 	"github.com/hexinfra/gorox/hemi/contrib/routers/simple"
 
 	. "github.com/hexinfra/gorox/hemi"
 )
 
-var myConfig = `
-stage {
-    app "example" {
-        .hostnames = ("*")
-        .webRoot   = %baseDir + "/root"
-        rule $path == "/favicon.ico" {
-            favicon {}
-        }
-        rule $path -f {
-            static {
-                .autoIndex = true
-            }
-        }
-        rule {
-            myHandlet {}
-        }
-    }
-    httpxServer "main" {
-        .forApps = ("example")
-        .address = ":3080"
-    }
-}
-`
-
-func main() {
-	exePath, err := os.Executable()
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	baseDir := filepath.Dir(exePath)
-	if runtime.GOOS == "windows" {
-		baseDir = filepath.ToSlash(baseDir)
-	}
-
-	if err := startHemi(baseDir, baseDir+"/logs", baseDir+"/temp", baseDir+"/vars", myConfig); err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-
-	select {} // do your other things here.
-}
-
-func startHemi(baseDir string, logsDir string, tempDir string, varsDir string, configText string) error {
+func init() {
 	RegisterHandlet("myHandlet", func(name string, stage *Stage, app *App) Handlet {
 		h := new(myHandlet)
 		h.onCreate(name, stage, app)
 		return h
 	})
-	SetBaseDir(baseDir)
-	SetLogsDir(logsDir)
-	SetTempDir(tempDir)
-	SetVarsDir(varsDir)
-	stage, err := FromText(configText)
-	if err != nil {
-		return err
-	}
-	stage.Start(0)
-	return nil
 }
 
-// myHandlet
 type myHandlet struct {
 	Handlet_
 	stage *Stage
