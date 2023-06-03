@@ -26,7 +26,7 @@ ACTION
   reweb      # tell leader to reopen its webui interface
   rework     # tell leader to restart worker gracefully
   worker     # call worker to report its info
-  reload     # tell worker to reload config
+  reload     # call worker to reload config
   cpu        # tell worker to perform cpu profiling
   heap       # tell worker to perform heap profiling
   thread     # tell worker to perform thread profiling
@@ -51,7 +51,7 @@ OPTIONS
   -logs   <path>    # logs directory to use
   -temp   <path>    # temp directory to use
   -vars   <path>    # vars directory to use
-  -out    <path>    # daemon's stdout file (default: myapp.log in logs dir)
+  -out    <path>    # daemon's stdout file (default: myapp.out in logs dir)
   -err    <path>    # daemon's stderr file (default: myapp.err in logs dir)
 
   "-debug" applies to all actions.
