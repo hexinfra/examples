@@ -1,4 +1,4 @@
-module github.com/hexinfra/examples
+module github.com/hexinfra/examples/embed
 
 go 1.19
 
