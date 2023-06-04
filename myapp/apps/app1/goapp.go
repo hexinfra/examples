@@ -1,4 +1,4 @@
-package main
+package app1
 
 import (
 	"github.com/hexinfra/gorox/hemi/contrib/routers/simple"

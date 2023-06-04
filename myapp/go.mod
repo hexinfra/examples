@@ -1,4 +1,4 @@
-module github.com/hexinfra/examples/myapp
+module myapp
 
 go 1.19
 
