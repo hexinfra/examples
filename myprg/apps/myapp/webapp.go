@@ -1,4 +1,4 @@
-package app1
+package myapp
 
 import (
 	"github.com/hexinfra/gorox/hemi/classic/mappers/simple"

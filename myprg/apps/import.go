@@ -1,5 +1,5 @@
 package apps
 
 import (
-	_ "myprg/apps/app1"
+	_ "myprg/apps/myapp"
 )
