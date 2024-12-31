@@ -1,4 +1,4 @@
 Examples
 ========
 
-  This repository contains some examples showing how to use Gorox's Hemi engine.
+  This repository contains some examples showing how to use the Hemi Engine.

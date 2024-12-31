@@ -1,38 +1,38 @@
 package app1
 
 import (
-	"github.com/hexinfra/gorox/hemi/contrib/routers/simple"
+	"github.com/hexinfra/gorox/hemi/classic/mappers/simple"
 
 	. "github.com/hexinfra/gorox/hemi"
 )
 
 func init() {
-	RegisterHandlet("myHandlet", func(name string, stage *Stage, app *App) Handlet {
+	RegisterHandlet("myHandlet", func(name string, stage *Stage, webapp *Webapp) Handlet {
 		h := new(myHandlet)
-		h.onCreate(name, stage, app)
+		h.onCreate(name, stage, webapp)
 		return h
 	})
 }
 
 type myHandlet struct {
 	Handlet_
-	stage *Stage
-	app   *App
+	stage  *Stage
+	webapp *Webapp
 }
 
-func (h *myHandlet) onCreate(name string, stage *Stage, app *App) {
+func (h *myHandlet) onCreate(name string, stage *Stage, webapp *Webapp) {
 	h.MakeComp(name)
 	h.stage = stage
-	h.app = app
+	h.webapp = webapp
 
 	r := simple.New()
 
 	r.Map("/foo", h.handleFoo)
 
-	h.UseRouter(h, r)
+	h.UseMapper(h, r)
 }
 func (h *myHandlet) OnShutdown() {
-	h.app.SubDone()
+	h.webapp.DecSub()
 }
 
 func (h *myHandlet) OnConfigure() {}

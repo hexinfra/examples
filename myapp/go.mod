@@ -1,5 +1,5 @@
 module myapp
 
-go 1.19
+go 1.20
 
-require github.com/hexinfra/gorox v0.1.7
+require github.com/hexinfra/gorox v0.2.0

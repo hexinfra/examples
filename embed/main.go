@@ -6,16 +6,18 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/hexinfra/gorox/hemi/contrib/routers/simple"
+	"github.com/hexinfra/gorox/hemi/classic/mappers/simple"
 
 	. "github.com/hexinfra/gorox/hemi"
+
+	_ "github.com/hexinfra/gorox/hemi/classic"
 )
 
 var myConfig = `
 stage {
-    app "example" {
+    webapp "example" {
         .hostnames = ("*")
-        .webRoot   = %baseDir + "/root"
+        .webRoot   = %topDir + "/web"
         rule $path == "/favicon.ico" {
             favicon {}
         }
@@ -29,7 +31,7 @@ stage {
         }
     }
     httpxServer "main" {
-        .forApps = ("example")
+        .webapps = ("example")
         .address = ":3080"
     }
 }
@@ -41,12 +43,12 @@ func main() {
 		fmt.Println(err.Error())
 		return
 	}
-	baseDir := filepath.Dir(exePath)
+	topDir := filepath.Dir(exePath)
 	if runtime.GOOS == "windows" {
-		baseDir = filepath.ToSlash(baseDir)
+		topDir = filepath.ToSlash(topDir)
 	}
 
-	if err := startHemi(baseDir, baseDir+"/logs", baseDir+"/temp", baseDir+"/vars", myConfig); err != nil {
+	if err := startHemi(topDir, topDir+"/log", topDir+"/tmp", topDir+"/var", myConfig); err != nil {
 		fmt.Println(err.Error())
 		return
 	}
@@ -54,17 +56,17 @@ func main() {
 	select {} // do your other things here.
 }
 
-func startHemi(baseDir string, logsDir string, tempDir string, varsDir string, configText string) error {
-	RegisterHandlet("myHandlet", func(name string, stage *Stage, app *App) Handlet {
+func startHemi(topDir string, logDir string, tmpDir string, varDir string, configText string) error {
+	RegisterHandlet("myHandlet", func(name string, stage *Stage, webapp *Webapp) Handlet {
 		h := new(myHandlet)
-		h.onCreate(name, stage, app)
+		h.onCreate(name, stage, webapp)
 		return h
 	})
-	SetBaseDir(baseDir)
-	SetLogsDir(logsDir)
-	SetTempDir(tempDir)
-	SetVarsDir(varsDir)
-	stage, err := FromText(configText)
+	SetTopDir(topDir)
+	SetLogDir(logDir)
+	SetTmpDir(tmpDir)
+	SetVarDir(varDir)
+	stage, err := StageFromText(configText)
 	if err != nil {
 		return err
 	}
@@ -75,23 +77,23 @@ func startHemi(baseDir string, logsDir string, tempDir string, varsDir string, c
 // myHandlet
 type myHandlet struct {
 	Handlet_
-	stage *Stage
-	app   *App
+	stage  *Stage
+	webapp *Webapp
 }
 
-func (h *myHandlet) onCreate(name string, stage *Stage, app *App) {
+func (h *myHandlet) onCreate(name string, stage *Stage, webapp *Webapp) {
 	h.MakeComp(name)
 	h.stage = stage
-	h.app = app
+	h.webapp = webapp
 
 	r := simple.New()
 
 	r.Map("/foo", h.handleFoo)
 
-	h.UseRouter(h, r)
+	h.UseMapper(h, r)
 }
 func (h *myHandlet) OnShutdown() {
-	h.app.SubDone()
+	h.webapp.DecSub()
 }
 
 func (h *myHandlet) OnConfigure() {}
