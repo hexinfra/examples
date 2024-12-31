@@ -4,10 +4,10 @@ import (
 	"os"
 
 	"github.com/hexinfra/gorox/hemi/procmgr"
-	"myapp/test"
+	"myprg/test"
 
-	_ "myapp/apps"
-	_ "myapp/exts"
+	_ "myprg/apps"
+	_ "myprg/exts"
 )
 
 func main() {
@@ -15,8 +15,8 @@ func main() {
 		test.Main()
 	} else {
 		procmgr.Main(&procmgr.Opts{
-			ProgramName:  "myapp",
-			ProgramTitle: "MyApp",
+			ProgramName:  "myprg",
+			ProgramTitle: "MyProgram",
 			DebugLevel:   0,
 			CmdUIAddr:    "127.0.0.1:9527",
 			WebUIAddr:    "127.0.0.1:9528",

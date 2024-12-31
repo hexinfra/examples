@@ -1,4 +1,4 @@
-module myapp
+module myprg
 
 go 1.20
 

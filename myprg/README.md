@@ -6,4 +6,4 @@ To build:
 
 To run:
 
-  shell> ./myapp
+  shell> ./myprg
