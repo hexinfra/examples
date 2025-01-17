@@ -16,23 +16,17 @@ func init() {
 
 type myHandlet struct {
 	Handlet_
-	stage  *Stage
-	webapp *Webapp
 }
 
 func (h *myHandlet) onCreate(name string, stage *Stage, webapp *Webapp) {
-	h.MakeComp(name)
-	h.stage = stage
-	h.webapp = webapp
+	h.Handlet_.OnCreate(name, stage, webapp)
 
 	r := simple.New()
-
 	r.Map("/foo", h.handleFoo)
-
 	h.UseMapper(h, r)
 }
 func (h *myHandlet) OnShutdown() {
-	h.webapp.DecSub()
+	h.Webapp().DecSub()
 }
 
 func (h *myHandlet) OnConfigure() {}

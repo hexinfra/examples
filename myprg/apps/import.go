@@ -1,5 +1,5 @@
 package apps
 
-import (
+import ( // import your webapps
 	_ "myprg/apps/myapp"
 )

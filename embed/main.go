@@ -77,14 +77,10 @@ func startHemi(topDir string, logDir string, tmpDir string, varDir string, confi
 // myHandlet
 type myHandlet struct {
 	Handlet_
-	stage  *Stage
-	webapp *Webapp
 }
 
 func (h *myHandlet) onCreate(name string, stage *Stage, webapp *Webapp) {
-	h.MakeComp(name)
-	h.stage = stage
-	h.webapp = webapp
+	h.Handlet_.OnCreate(name, stage, webapp)
 
 	r := simple.New()
 
@@ -93,7 +89,7 @@ func (h *myHandlet) onCreate(name string, stage *Stage, webapp *Webapp) {
 	h.UseMapper(h, r)
 }
 func (h *myHandlet) OnShutdown() {
-	h.webapp.DecSub()
+	h.Webapp().DecSub()
 }
 
 func (h *myHandlet) OnConfigure() {}
