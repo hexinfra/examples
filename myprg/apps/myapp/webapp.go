@@ -7,9 +7,9 @@ import (
 )
 
 func init() {
-	RegisterHandlet("myHandlet", func(name string, stage *Stage, webapp *Webapp) Handlet {
+	RegisterHandlet("myHandlet", func(compName string, stage *Stage, webapp *Webapp) Handlet {
 		h := new(myHandlet)
-		h.onCreate(name, stage, webapp)
+		h.onCreate(compName, stage, webapp)
 		return h
 	})
 }
@@ -18,8 +18,8 @@ type myHandlet struct {
 	Handlet_
 }
 
-func (h *myHandlet) onCreate(name string, stage *Stage, webapp *Webapp) {
-	h.Handlet_.OnCreate(name, stage, webapp)
+func (h *myHandlet) onCreate(compName string, stage *Stage, webapp *Webapp) {
+	h.Handlet_.OnCreate(compName, stage, webapp)
 
 	r := simple.New()
 	r.Map("/foo", h.handleFoo)

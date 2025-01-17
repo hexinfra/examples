@@ -57,9 +57,9 @@ func main() {
 }
 
 func startHemi(topDir string, logDir string, tmpDir string, varDir string, configText string) error {
-	RegisterHandlet("myHandlet", func(name string, stage *Stage, webapp *Webapp) Handlet {
+	RegisterHandlet("myHandlet", func(compName string, stage *Stage, webapp *Webapp) Handlet {
 		h := new(myHandlet)
-		h.onCreate(name, stage, webapp)
+		h.onCreate(compName, stage, webapp)
 		return h
 	})
 	SetTopDir(topDir)
@@ -79,13 +79,11 @@ type myHandlet struct {
 	Handlet_
 }
 
-func (h *myHandlet) onCreate(name string, stage *Stage, webapp *Webapp) {
-	h.Handlet_.OnCreate(name, stage, webapp)
+func (h *myHandlet) onCreate(compName string, stage *Stage, webapp *Webapp) {
+	h.Handlet_.OnCreate(compName, stage, webapp)
 
 	r := simple.New()
-
 	r.Map("/foo", h.handleFoo)
-
 	h.UseMapper(h, r)
 }
 func (h *myHandlet) OnShutdown() {
