@@ -13,7 +13,36 @@ import (
 	_ "github.com/hexinfra/gorox/hemi/classic"
 )
 
-var myConfig = `
+func main() {
+	exePath, err := os.Executable()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	topDir := filepath.Dir(exePath)
+	if runtime.GOOS == "windows" {
+		topDir = filepath.ToSlash(topDir)
+	}
+
+	if err := startHemi(topDir, topDir+"/log", topDir+"/tmp", topDir+"/var"); err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	select {} // do your other things here.
+}
+
+func startHemi(topDir string, logDir string, tmpDir string, varDir string) error {
+	RegisterHandlet("myHandlet", func(compName string, stage *Stage, webapp *Webapp) Handlet {
+		h := new(myHandlet)
+		h.onCreate(compName, stage, webapp)
+		return h
+	})
+	SetTopDir(topDir)
+	SetLogDir(logDir)
+	SetTmpDir(tmpDir)
+	SetVarDir(varDir)
+	var configText = `
 stage {
     webapp "example" {
         .hostnames = ("*")
@@ -36,36 +65,6 @@ stage {
     }
 }
 `
-
-func main() {
-	exePath, err := os.Executable()
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	topDir := filepath.Dir(exePath)
-	if runtime.GOOS == "windows" {
-		topDir = filepath.ToSlash(topDir)
-	}
-
-	if err := startHemi(topDir, topDir+"/log", topDir+"/tmp", topDir+"/var", myConfig); err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-
-	select {} // do your other things here.
-}
-
-func startHemi(topDir string, logDir string, tmpDir string, varDir string, configText string) error {
-	RegisterHandlet("myHandlet", func(compName string, stage *Stage, webapp *Webapp) Handlet {
-		h := new(myHandlet)
-		h.onCreate(compName, stage, webapp)
-		return h
-	})
-	SetTopDir(topDir)
-	SetLogDir(logDir)
-	SetTmpDir(tmpDir)
-	SetVarDir(varDir)
 	stage, err := StageFromText(configText)
 	if err != nil {
 		return err
@@ -93,22 +92,22 @@ func (h *myHandlet) OnShutdown() {
 func (h *myHandlet) OnConfigure() {}
 func (h *myHandlet) OnPrepare()   {}
 
-func (h *myHandlet) Handle(req Request, resp Response) (next bool) {
+func (h *myHandlet) Handle(req ServerRequest, resp ServerResponse) (next bool) {
 	h.Dispatch(req, resp, h.notFound)
 	return
 }
-func (h *myHandlet) notFound(req Request, resp Response) {
+func (h *myHandlet) notFound(req ServerRequest, resp ServerResponse) {
 	resp.Send("handle not found!")
 }
 
-func (h *myHandlet) handleFoo(req Request, resp Response) { // METHOD /foo
+func (h *myHandlet) handleFoo(req ServerRequest, resp ServerResponse) { // METHOD /foo
 	resp.Echo(req.H("user-agent"))
 }
 
-func (h *myHandlet) GET_(req Request, resp Response) { // GET /
+func (h *myHandlet) GET_(req ServerRequest, resp ServerResponse) { // GET /
 	resp.Echo("hello, world! ")
 	resp.Echo("this is an example application.")
 }
-func (h *myHandlet) POST_user_login(req Request, resp Response) { // POST /user/login
+func (h *myHandlet) POST_user_login(req ServerRequest, resp ServerResponse) { // POST /user/login
 	resp.Send("what are you doing?")
 }
