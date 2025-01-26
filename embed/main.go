@@ -106,7 +106,7 @@ func (h *myHandlet) handleFoo(req ServerRequest, resp ServerResponse) { // METHO
 
 func (h *myHandlet) GET_(req ServerRequest, resp ServerResponse) { // GET /
 	resp.Echo("hello, world! ")
-	resp.Echo("this is an example application.")
+	resp.Echo("this is embed.")
 }
 func (h *myHandlet) POST_user_login(req ServerRequest, resp ServerResponse) { // POST /user/login
 	resp.Send("what are you doing?")

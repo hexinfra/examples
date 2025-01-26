@@ -37,7 +37,7 @@ func (h *myHandlet) Handle(req ServerRequest, resp ServerResponse) (next bool) {
 	return
 }
 func (h *myHandlet) notFound(req ServerRequest, resp ServerResponse) {
-	resp.Send("handle not found!")
+	resp.Send("404 handle not found!")
 }
 
 func (h *myHandlet) handleFoo(req ServerRequest, resp ServerResponse) { // METHOD /foo
@@ -46,7 +46,7 @@ func (h *myHandlet) handleFoo(req ServerRequest, resp ServerResponse) { // METHO
 
 func (h *myHandlet) GET_(req ServerRequest, resp ServerResponse) { // GET /
 	resp.Echo("hello, world! ")
-	resp.Echo("this is an example application.")
+	resp.Echo("this is myapp.")
 }
 func (h *myHandlet) POST_user_login(req ServerRequest, resp ServerResponse) { // POST /user/login
 	resp.Send("what are you doing?")
