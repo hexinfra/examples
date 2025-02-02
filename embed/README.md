@@ -1,4 +1,4 @@
-This is an example showing how to embed the Hemi engine into your program.
+This is an example showing how to embed the Hemi Engine into your program.
 
 To build:
 

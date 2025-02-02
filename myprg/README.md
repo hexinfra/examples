@@ -1,4 +1,5 @@
-This is an example showing how to use the Hemi engine to develop applications.
+This is an example showing how to use the Hemi Engine to develop web
+applications and rpc services.
 
 To build:
 

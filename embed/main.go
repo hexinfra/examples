@@ -6,11 +6,11 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/hexinfra/gorox/hemi/classic/mappers/simple"
+	"github.com/hexinfra/gorox/hemi/builtin/mappers/simple"
 
 	. "github.com/hexinfra/gorox/hemi"
 
-	_ "github.com/hexinfra/gorox/hemi/classic"
+	_ "github.com/hexinfra/gorox/hemi/builtin"
 )
 
 func main() {

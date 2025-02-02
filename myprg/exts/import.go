@@ -1,6 +1,6 @@
 package exts
 
-import _ "github.com/hexinfra/gorox/hemi/classic"
+import _ "github.com/hexinfra/gorox/hemi/builtin" // standard exts
 
 import ( // import contrib exts here
 )
