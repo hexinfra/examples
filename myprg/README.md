@@ -3,8 +3,12 @@ applications and rpc services.
 
 To build:
 
-  shell> go build
+    shell> go build
 
 To run:
 
-  shell> ./myprg
+    shell> ./myprg
+
+To visit:
+
+    http://localhost:3080
