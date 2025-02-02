@@ -21,9 +21,9 @@ type myHandlet struct {
 func (h *myHandlet) onCreate(compName string, stage *Stage, webapp *Webapp) {
 	h.Handlet_.OnCreate(compName, stage, webapp)
 
-	r := simple.New()
-	r.Map("/foo", h.handleFoo)
-	h.UseMapper(h, r)
+	m := simple.New()
+	m.Map("/foo", h.handleFoo)
+	h.UseMapper(h, m)
 }
 func (h *myHandlet) OnShutdown() {
 	h.Webapp().DecSub()
